@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reisinger Studio</title>
+  <style>
+    body {
+      font-family: 'Courier New', Courier, monospace;
+      background: #f4f4f4;
+      color: #111;
+      padding: 40px;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+
+    nav div {
+      margin-bottom: 8px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-top: 20px;
+      margin-bottom: 30px;
+    }
+
+    .column {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .tag-group {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tag-group li {
+      cursor: pointer;
+      padding: 2px 0;
+    }
+
+    .tag-group li.selected {
+      font-weight: bold;
+    }
+
+    .order {
+      margin-top: 30px;
+      font-size: 1rem;
+    }
+
+    .bottom {
+      margin-top: 50px;
+    }
+
+    .bottom img {
+      width: 100%;
+      max-width: 400px;
+      display: block;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>SLAPSTEAM COFFEE</h1>
+
+    <nav>
+      <div>[+]CONTACT</div>
+      <div>[+]ABOUT</div>
+      <div>[-]SEARCH BY TAGS</div>
+    </nav>
+
+    <section class="tags">
+      <div class="column">
+        <strong>C</strong>
+        <ul class="tag-group" data-group="C">
+          <li class="selected">[●] #coffee</li>
+          <li>[ ] #Brew Method</li>
+          <li>[ ] #Origin</li>
+          <li>[ ] #Blends</li>
+        </ul>
+      </div>
+      <div class="column">
+        <strong>D</strong>
+        <ul class="tag-group" data-group="D">
+          <li>[ ] #Suppliers</li>
+          <li>[ ] #Roasts</li>
+          <li class="selected">[●] #Roasting</li>
+          <li>[ ] #shop</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="order">[↗]ORDER</div>
+
+    <div class="bottom">
+      <p>53. Understanding</p>
+      <img src="happy.jpg" alt="Sample image">
+    </div>
+  </main>
+
+  <script>
+    const tagGroups = document.querySelectorAll('.tag-group');
+
+    tagGroups.forEach(group => {
+      const items = group.querySelectorAll('li');
+      let selectedIndex = Array.from(items).findIndex(item => item.classList.contains('selected'));
+
+      const updateSelection = (index) => {
+        items.forEach((item, i) => {
+          item.classList.remove('selected');
+          item.innerHTML = item.innerHTML.replace('[●]', '[ ]');
+        });
+        items[index].classList.add('selected');
+        items[index].innerHTML = items[index].innerHTML.replace('[ ]', '[●]');
+      };
+
+      // Initial cleanup
+      updateSelection(selectedIndex >= 0 ? selectedIndex : 0);
+
+      group.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+          e.preventDefault();
+          selectedIndex = Array.from(items).findIndex(item => item.classList.contains('selected'));
+          if (e.key === 'ArrowDown') {
+            selectedIndex = (selectedIndex + 1) % items.length;
+          } else if (e.key === 'ArrowUp') {
+            selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+          }
+          updateSelection(selectedIndex);
+        }
+      });
+
+      // Add focus and click functionality
+      items.forEach((item, index) => {
+        item.setAttribute('tabindex', '0');
+        item.addEventListener('click', () => updateSelection(index));
+        item.addEventListener('focus', () => {
+          selectedIndex = index;
+        });
+      });
+    });
+  </script>
+</body>
+</html>
